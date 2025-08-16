@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/Uma-git719/jenkins-web-demo.git', branch: 'main'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'No build needed for static HTML'
+            }
+        }
+        stage('Deploy to Azure VM') {
+            steps {
+                sshagent(credentials: ['azure-vm-ssh']) {
+                    sh 'scp -o StrictHostKeyChecking=no index.html azureuser@20.80.80.67:/var/www/html/'
+                }
+            }
+        }
+    }
+}
