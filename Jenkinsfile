@@ -2,15 +2,13 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Deploy to Azure VM') {
             steps {
-                echo 'Building the application...'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
+                sshagent(['azure-vm-ssh']) {
+                    sh '''
+                        scp index.html azureuser@<VM_PUBLIC_IP>:/var/www/html/index.html
+                    '''
+                }
             }
         }
     }
